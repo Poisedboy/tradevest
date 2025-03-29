@@ -55,7 +55,10 @@ export function SigninForm({
 	}
 
 	return (
-		<div className={cn('flex flex-col gap-6', className)} {...props}>
+		<div
+			className={cn('flex flex-col gap-6 shadow-2xl rounded-xl', className)}
+			{...props}
+		>
 			<Card className="overflow-hidden">
 				<CardContent className="grid p-0 md:grid-cols-2">
 					<div className="flex flex-col gap-6 p-6 md:p-8">

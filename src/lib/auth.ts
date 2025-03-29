@@ -1,9 +1,10 @@
-import NextAuth from 'next-auth';
+import NextAuth, { Session, User } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
 import { prisma } from './prisma';
+import { JWT } from 'next-auth/jwt';
 
-export const handlers = NextAuth({
+export const authOptions = {
 	providers: [
 		CredentialsProvider({
 			name: 'Credentials',
@@ -37,18 +38,37 @@ export const handlers = NextAuth({
 					throw new Error('Invalid password');
 				}
 
-				return { id: user.id, email: user.email };
+				return {
+					id: user.id,
+					email: user.email,
+					firstName: user.firstName,
+					lastName: user.lastName,
+				};
 			},
 		}),
 	],
-	session: {
-		strategy: 'jwt',
-	},
 	callbacks: {
-		async session({ session, token }) {
-			session.user.id = token.sub;
+		async jwt({ token, user }: { token: JWT; user: User }) {
+			if (user) {
+				token.id = user.id;
+				token.firstName = user.firstName;
+				token.lastName = user.lastName;
+			}
+			return token;
+		},
+		async session({ session, token }: { session: Session; token: User }) {
+			session.user.id = token.id;
+			session.user.firstName = token.firstName;
+			session.user.lastName = token.lastName;
+			session.user.name = `${token.firstName} ${token.lastName}`;
 			return session;
 		},
 	},
+	session: {
+		strategy: 'jwt' as const,
+		maxAge: 60,
+	},
 	secret: process.env.NEXTAUTH_SECRET,
-});
+};
+
+export const handlers = NextAuth(authOptions);

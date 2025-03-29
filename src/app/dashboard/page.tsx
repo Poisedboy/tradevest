@@ -1,7 +1,15 @@
-export default function DashboardPage() {
+import { getStatistic } from '@/actions/getStatistic';
+import { StatisticSection } from '@/components/StatisticSection';
+
+export default async function DashboardPage() {
+	const { balance, firstName, positions } = await getStatistic();
 	return (
-		<div className="bg-neutral-400">
-			<h1>Dashboard</h1>
+		<div className="paddingX">
+			<StatisticSection
+				balance={balance}
+				positions={positions}
+				username={firstName}
+			/>
 		</div>
 	);
 }
