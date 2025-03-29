@@ -1,140 +1,139 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
-import Link from "next/link";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { cn } from '@/lib/utils';
+import Link from 'next/link';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "./ui/form";
-import { SignupFormType, signupSchema } from "@/types/forms.types";
-import { createUser } from "@/actions/createUser";
-import { useNotification } from "@/hooks/useNotification";
-import { useRouter } from "next/navigation";
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from './ui/form';
+import { SignupFormType, signupSchema } from '@/types/forms.types';
+import { createUser } from '@/actions/createUser';
+import { useNotification } from '@/hooks/useNotification';
+import { useRouter } from 'next/navigation';
 
 export function SignupForm({
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
-  const { successToast, errorToast } = useNotification();
-  const router = useRouter();
+	className,
+	...props
+}: React.ComponentProps<'div'>) {
+	const { successToast, errorToast } = useNotification();
+	const router = useRouter();
 
-  const form = useForm<SignupFormType>({
-    resolver: zodResolver(signupSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-      firstName: "",
-      lastName: "",
-    },
-  });
+	const form = useForm<SignupFormType>({
+		resolver: zodResolver(signupSchema),
+		defaultValues: {
+			email: '',
+			password: '',
+			firstName: '',
+			lastName: '',
+		},
+	});
 
-  async function onSubmit(values: SignupFormType) {
-    try {
-      const response = await createUser(values);
+	async function onSubmit(values: SignupFormType) {
+		try {
+			const response = await createUser(values);
 
-      if (response.ok) {
-        successToast(response.message);
-        router.push("/signin");
-      } else {
-        errorToast(response.message);
-      }
-    } catch (error) {
-      errorToast("An error occurred: " + error);
-    }
-  }
+			if (response.ok) {
+				successToast(response.message);
+				router.push('/signin');
+			} else {
+				errorToast(response.message);
+			}
+		} catch (error) {
+			errorToast('An error occurred: ' + error);
+		}
+	}
 
-  return (
-    <div
-      className={cn(
-        "flex flex-col gap-6 py-5 border-muted shadow-2xl w-full md:w-[400px] border rounded-lg",
-        className
-      )}
-      {...props}
-    >
-      <div className="flex flex-col gap-6 px-6 md:px-8">
-        <div className="flex flex-col items-center text-center">
-          <h1 className="text-2xl font-bold">Sign Up</h1>
-          <p className="text-muted-foreground text-balance">
-            Sign up to your TradeVest account
-          </p>
-        </div>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input placeholder="mail@mail.com" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <div className="flex flex-col md:flex-row gap-5">
-              <FormField
-                control={form.control}
-                name="firstName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>First Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="John" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="lastName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Last Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Dou" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input isPassword {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button type="submit" className="w-full">
-              Sign up
-            </Button>
-          </form>
-        </Form>
+	return (
+		<div
+			className={cn(
+				'flex flex-col gap-6 py-5 border-muted shadow-2xl w-full md:w-[400px] border rounded-lg',
+				className,
+			)}
+			{...props}
+		>
+			<div className="flex flex-col gap-6 px-6 md:px-8">
+				<div className="flex flex-col items-center text-center">
+					<h1 className="text-2xl font-bold">Sign Up</h1>
+					<p className="text-muted-foreground text-balance">
+						Sign up to your TradeVest account
+					</p>
+				</div>
+				<Form {...form}>
+					<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+						<FormField
+							control={form.control}
+							name="email"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Email</FormLabel>
+									<FormControl>
+										<Input placeholder="mail@mail.com" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<div className="flex flex-col md:flex-row gap-5">
+							<FormField
+								control={form.control}
+								name="firstName"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>First Name</FormLabel>
+										<FormControl>
+											<Input placeholder="John" {...field} />
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+							<FormField
+								control={form.control}
+								name="lastName"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Last Name</FormLabel>
+										<FormControl>
+											<Input placeholder="Dou" {...field} />
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+						</div>
+						<FormField
+							control={form.control}
+							name="password"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Password</FormLabel>
+									<FormControl>
+										<Input isPassword {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<Button type="submit" className="w-full">
+							Sign up
+						</Button>
+					</form>
+				</Form>
 
-        {/* <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
+				{/* <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
                 <span className="bg-background text-muted-foreground relative z-10 px-2">
                   Or continue with
                 </span>
               </div> */}
-        {/* <div className="grid grid-cols-3 gap-4">
+				{/* <div className="grid grid-cols-3 gap-4">
                 <Button variant="outline" className="w-full">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <path
@@ -167,13 +166,13 @@ export function SignupForm({
                   <span className="sr-only">Login with Meta</span>
                 </Button>
               </div> */}
-        <div className="text-center text-sm">
-          Have an account?{" "}
-          <Link href={"/signin"} className="underline underline-offset-4">
-            Sign in
-          </Link>
-        </div>
-      </div>
-    </div>
-  );
+				<div className="text-center text-sm">
+					Have an account?{' '}
+					<Link href={'/signin'} className="underline underline-offset-4">
+						Sign in
+					</Link>
+				</div>
+			</div>
+		</div>
+	);
 }

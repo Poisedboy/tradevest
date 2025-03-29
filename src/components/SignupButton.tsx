@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { useRouter } from "next/navigation";
-import { Button } from "./ui/button";
+import { useRouter } from 'next/navigation';
+import { Button } from './ui/button';
 
 export function SignUpButton() {
-  const router = useRouter();
+	const router = useRouter();
 
-  return (
-    <Button size={"lg"} onClick={() => router.push("/signup")}>
-      Sign up
-    </Button>
-  );
+	return (
+		<Button size={'lg'} onClick={() => router.push('/signup')}>
+			Sign up
+		</Button>
+	);
 }

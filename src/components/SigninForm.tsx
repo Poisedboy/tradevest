@@ -1,107 +1,108 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
-import Link from "next/link";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { cn } from '@/lib/utils';
+import Link from 'next/link';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "./ui/form";
-import { SigninFormType, signinSchema } from "@/types/forms.types";
-import { useNotification } from "@/hooks/useNotification";
-import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from './ui/form';
+import { SigninFormType, signinSchema } from '@/types/forms.types';
+import { useNotification } from '@/hooks/useNotification';
+import { useRouter } from 'next/navigation';
+import { signIn } from 'next-auth/react';
+import Image from 'next/image';
 
 export function SigninForm({
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
-  const { successToast, errorToast } = useNotification();
-  const router = useRouter();
+	className,
+	...props
+}: React.ComponentProps<'div'>) {
+	const { successToast, errorToast } = useNotification();
+	const router = useRouter();
 
-  const form = useForm<SigninFormType>({
-    resolver: zodResolver(signinSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
-  });
-  async function onSubmit(values: SigninFormType) {
-    try {
-      const response = await signIn("credentials", {
-        email: values.email,
-        password: values.password,
-        redirect: false,
-      });
+	const form = useForm<SigninFormType>({
+		resolver: zodResolver(signinSchema),
+		defaultValues: {
+			email: '',
+			password: '',
+		},
+	});
+	async function onSubmit(values: SigninFormType) {
+		try {
+			const response = await signIn('credentials', {
+				email: values.email,
+				password: values.password,
+				redirect: false,
+			});
 
-      if (response?.ok) {
-        successToast("Signed in successfully");
-        router.push("/dashboard");
-      } else {
-        errorToast(response?.error || "An error occurred");
-      }
-    } catch (error) {
-      errorToast("An error occurred: " + error);
-    }
-  }
+			if (response?.ok) {
+				successToast('Signed in successfully');
+				router.push('/dashboard');
+			} else {
+				errorToast(response?.error || 'An error occurred');
+			}
+		} catch (error) {
+			errorToast('An error occurred: ' + error);
+		}
+	}
 
-  return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card className="overflow-hidden">
-        <CardContent className="grid p-0 md:grid-cols-2">
-          <div className="flex flex-col gap-6 p-6 md:p-8">
-            <Form {...form}>
-              <h1 className="text-2xl font-semibold text-center">Sign in</h1>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-8"
-              >
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input placeholder="mail@mail.com" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Password</FormLabel>
-                      <FormControl>
-                        <Input isPassword {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <Button type="submit" className="w-full">
-                  Sign in
-                </Button>
-              </form>
-            </Form>
+	return (
+		<div className={cn('flex flex-col gap-6', className)} {...props}>
+			<Card className="overflow-hidden">
+				<CardContent className="grid p-0 md:grid-cols-2">
+					<div className="flex flex-col gap-6 p-6 md:p-8">
+						<Form {...form}>
+							<h1 className="text-2xl font-semibold text-center">Sign in</h1>
+							<form
+								onSubmit={form.handleSubmit(onSubmit)}
+								className="space-y-8"
+							>
+								<FormField
+									control={form.control}
+									name="email"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Email</FormLabel>
+											<FormControl>
+												<Input placeholder="mail@mail.com" {...field} />
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
+									name="password"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Password</FormLabel>
+											<FormControl>
+												<Input isPassword {...field} />
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<Button type="submit" className="w-full">
+									Sign in
+								</Button>
+							</form>
+						</Form>
 
-            {/* <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
+						{/* <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
                 <span className="bg-background text-muted-foreground relative z-10 px-2">
                   Or continue with
                 </span>
               </div> */}
-            {/* <div className="grid grid-cols-3 gap-4">
+						{/* <div className="grid grid-cols-3 gap-4">
                 <Button variant="outline" className="w-full">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <path
@@ -134,22 +135,24 @@ export function SigninForm({
                   <span className="sr-only">Login with Meta</span>
                 </Button>
               </div> */}
-            <div className="text-center text-sm">
-              Don't have an account?{" "}
-              <Link href={"/signup"} className="underline underline-offset-4">
-                Sign up
-              </Link>
-            </div>
-          </div>
-          <div className="bg-muted relative hidden md:block">
-            <img
-              src="/login-image.png"
-              alt="Image"
-              className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-            />
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  );
+						<div className="text-center text-sm">
+							Don&apos;t have an account?{' '}
+							<Link href={'/signup'} className="underline underline-offset-4">
+								Sign up
+							</Link>
+						</div>
+					</div>
+					<div className="bg-muted relative hidden md:block">
+						<Image
+							src="/login-image.png"
+							alt="computer"
+							width={500}
+							height={500}
+							className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+						/>
+					</div>
+				</CardContent>
+			</Card>
+		</div>
+	);
 }
