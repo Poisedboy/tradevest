@@ -42,7 +42,13 @@ export const handlers = NextAuth({
     }),
   ],
   session: {
-    strategy: "database",
+    strategy: "jwt",
+  },
+  callbacks: {
+    async session({ session, token }) {
+      session.user.id = token.sub;
+      return session;
+    },
   },
   secret: process.env.NEXTAUTH_SECRET,
 });
