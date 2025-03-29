@@ -44,7 +44,7 @@ export function SigninForm({
 
       if (response?.ok) {
         successToast("Signed in successfully");
-        router.push("/signin");
+        router.push("/dashboard");
       } else {
         errorToast(response?.error || "An error occurred");
       }

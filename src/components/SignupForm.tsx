@@ -32,8 +32,11 @@ export function SignupForm({
     defaultValues: {
       email: "",
       password: "",
+      firstName: "",
+      lastName: "",
     },
   });
+
   async function onSubmit(values: SignupFormType) {
     try {
       const response = await createUser(values);
@@ -50,59 +53,88 @@ export function SignupForm({
   }
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card className="overflow-hidden">
-        <CardContent className="grid p-0 md:grid-cols-2">
-          <div className="flex flex-col gap-6 p-6 md:p-8">
-            <div className="flex flex-col items-center text-center">
-              <h1 className="text-2xl font-bold">Welcome back!</h1>
-              <p className="text-muted-foreground text-balance">
-                Login to your TradeVest account
-              </p>
+    <div
+      className={cn(
+        "flex flex-col gap-6 py-5 border-muted shadow-2xl w-full md:w-[400px] border rounded-lg",
+        className
+      )}
+      {...props}
+    >
+      <div className="flex flex-col gap-6 px-6 md:px-8">
+        <div className="flex flex-col items-center text-center">
+          <h1 className="text-2xl font-bold">Sign Up</h1>
+          <p className="text-muted-foreground text-balance">
+            Sign up to your TradeVest account
+          </p>
+        </div>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input placeholder="mail@mail.com" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div className="flex flex-col md:flex-row gap-5">
+              <FormField
+                control={form.control}
+                name="firstName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>First Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="John" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="lastName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Last Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Dou" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-8"
-              >
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input placeholder="mail@mail.com" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Password</FormLabel>
-                      <FormControl>
-                        <Input isPassword {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <Button type="submit" className="w-full">
-                  Sign up
-                </Button>
-              </form>
-            </Form>
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input isPassword {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="submit" className="w-full">
+              Sign up
+            </Button>
+          </form>
+        </Form>
 
-            {/* <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
+        {/* <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
                 <span className="bg-background text-muted-foreground relative z-10 px-2">
                   Or continue with
                 </span>
               </div> */}
-            {/* <div className="grid grid-cols-3 gap-4">
+        {/* <div className="grid grid-cols-3 gap-4">
                 <Button variant="outline" className="w-full">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <path
@@ -135,25 +167,12 @@ export function SignupForm({
                   <span className="sr-only">Login with Meta</span>
                 </Button>
               </div> */}
-            <div className="text-center text-sm">
-              Have an account?{" "}
-              <Link href={"/signin"} className="underline underline-offset-4">
-                Sign in
-              </Link>
-            </div>
-          </div>
-          <div className="bg-muted relative hidden md:block">
-            <img
-              src="/login-image.png"
-              alt="Image"
-              className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-            />
-          </div>
-        </CardContent>
-      </Card>
-      <div className="text-muted-foreground hover:[&_a]:text-primary text-center text-xs text-balance [&_a]:underline [&_a]:underline-offset-4">
-        By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
-        and <a href="#">Privacy Policy</a>.
+        <div className="text-center text-sm">
+          Have an account?{" "}
+          <Link href={"/signin"} className="underline underline-offset-4">
+            Sign in
+          </Link>
+        </div>
       </div>
     </div>
   );
