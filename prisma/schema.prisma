@@ -39,7 +39,7 @@ model Position {
   positionType PositionType
   status       PositionStatus @default(OPEN)
   createdAt    DateTime       @default(now())
-  closedAt     DateTime?
+  updatedAt    DateTime       @updatedAt
 }
 
 enum Market {

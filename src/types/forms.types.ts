@@ -1,3 +1,4 @@
+import { Market, PositionStatus, PositionType } from '@prisma/client';
 import { z } from 'zod';
 
 export const signupSchema = z.object({
@@ -19,3 +20,16 @@ export const signinSchema = z.object({
 });
 
 export type SigninFormType = z.infer<typeof signinSchema>;
+
+export const positionSchema = z.object({
+	market: z.nativeEnum(Market),
+	pair: z.string().min(1, 'Pair is required'),
+	entryPrice: z.number().positive('must be greater than 0'),
+	exitPrice: z.number().positive('must be greater than 0'),
+	volume: z.number().positive('must be greater than 0'),
+	profitLoss: z.number(),
+	positionType: z.nativeEnum(PositionType),
+	status: z.nativeEnum(PositionStatus),
+});
+
+export type PositionFormType = z.infer<typeof positionSchema>;
