@@ -3,6 +3,7 @@
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { PositionFormType, positionSchema } from '@/types/forms.types';
+import { Balance } from '@prisma/client';
 import { getServerSession } from 'next-auth';
 import { revalidatePath } from 'next/cache';
 
@@ -15,32 +16,33 @@ export const createPosition = async (
 	}
 	try {
 		const session = await getServerSession(authOptions);
-
 		if (!session) {
 			return { message: 'User not found', ok: false };
 		}
-
+		const balanceId = session.user.balance.find(
+			(balance: Balance) => balance.market === position.market,
+		).id;
 		const positionData = await prisma.position.create({
 			data: {
-				userId: session.user.id,
-				market: position.market,
+				balanceId: balanceId,
 				pair: position.pair,
 				entryPrice: position.entryPrice,
 				exitPrice: position.exitPrice,
+				entryTime: position.entryTime,
+				exitTime: position.exitTime,
 				volume: position.volume,
 				profitLoss: position.profitLoss,
 				positionType: position.positionType,
 				status: position.status,
 			},
 		});
-
 		if (positionData) {
 			const balance = await prisma.balance.update({
 				where: {
 					userId: session.user.id,
 				},
 				data: {
-					total: {
+					balance: {
 						increment: position.profitLoss,
 					},
 				},
@@ -49,6 +51,7 @@ export const createPosition = async (
 				return { message: 'Balance not updated', ok: false };
 			} else {
 				revalidatePath('/dashboard');
+				revalidatePath('/positions');
 				return {
 					message: 'Position created successfully',
 					ok: true,
@@ -57,7 +60,8 @@ export const createPosition = async (
 		} else {
 			return { message: 'Position not created', ok: false };
 		}
-	} catch (error) {
-		return { message: error as string, ok: false };
+	} catch (e) {
+		console.error(e);
+		return { message: 'Server error', ok: false };
 	}
 };

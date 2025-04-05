@@ -4,14 +4,15 @@ import { useState } from 'react';
 import { Input } from './ui/input';
 import { ModeToggle } from './ModeToggle';
 import { Button } from './ui/button';
-import { HomeIcon, SettingsIcon, ShoppingCart } from 'lucide-react';
+import { FileSpreadsheet, HomeIcon, SettingsIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { signOut } from 'next-auth/react';
 
 const links = [
 	{ name: 'Home', href: '/dashboard', icon: <HomeIcon /> },
 	{ name: 'Settings', href: '/settings', icon: <SettingsIcon /> },
-	{ name: 'Cart', href: '/cart', icon: <ShoppingCart /> },
+	{ name: 'Positions', href: '/positions', icon: <FileSpreadsheet /> },
+	// { name: 'Cart', href: '/cart', icon: <ShoppingCart /> },
 ];
 
 export const NavigationBar = () => {

@@ -1,17 +1,17 @@
 import { getStatistic } from '@/actions/getStatistic';
-import { PanelSection } from '@/components/PanelSection';
 import { StatisticSection } from '@/components/StatisticSection';
 
 export default async function DashboardPage() {
-	const { balance, firstName, positions } = await getStatistic();
+	const { balance, firstName, positionsQnty } = await getStatistic();
 	return (
 		<div className="paddingX space-y-5">
 			<StatisticSection
 				balance={balance}
-				positions={positions}
+				positions={positionsQnty}
 				username={firstName}
 			/>
-			<PanelSection />
+
+			{/* <PositionChart positions={positions} /> */}
 		</div>
 	);
 }

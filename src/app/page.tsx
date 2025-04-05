@@ -6,7 +6,7 @@ export default function Home() {
 			<div className="space-y-4">
 				<h1 className="title">.Welcome!</h1>
 				<div>
-					<p className="subtitle">Here is you can</p>
+					<p className="subtitle">Here you can</p>
 					<ul>
 						<li className="paragraph">.Collect trading history in one place</li>
 						<li className="paragraph">.Track your progress</li>

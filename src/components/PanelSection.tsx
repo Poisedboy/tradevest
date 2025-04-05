@@ -12,7 +12,7 @@ import {
 	FormMessage,
 } from './ui/form';
 import { useForm } from 'react-hook-form';
-import { Market, PositionStatus, PositionType } from '@prisma/client';
+import { Balance, Market, PositionStatus, PositionType } from '@prisma/client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { PositionFormType, positionSchema } from '@/types/forms.types';
 import { Input } from './ui/input';
@@ -20,10 +20,15 @@ import { Modal } from './Modal';
 import { Combobox } from './Combobox';
 import { useNotification } from '@/hooks/useNotification';
 import { createPosition } from '@/actions/createPosition';
+import { Card } from './ui/card';
+import { DateTimePicker } from './DateTimePicker';
+import { useSession } from 'next-auth/react';
 
 export const PanelSection: React.FC = () => {
 	const { successToast, errorToast } = useNotification();
 	const [isOpen, setIsOpen] = useState(false);
+	const { data } = useSession();
+
 	const form = useForm({
 		resolver: zodResolver(positionSchema),
 		defaultValues: {
@@ -31,6 +36,8 @@ export const PanelSection: React.FC = () => {
 			pair: '',
 			entryPrice: 0,
 			exitPrice: 0,
+			entryTime: new Date(),
+			exitTime: new Date(),
 			volume: 0,
 			profitLoss: 0,
 			positionType: PositionType.LONG,
@@ -39,17 +46,22 @@ export const PanelSection: React.FC = () => {
 	});
 
 	async function onSubmit(values: PositionFormType) {
-		const { message, ok } = await createPosition(values);
-		if (ok) {
-			form.reset();
-			setIsOpen(false);
-			successToast(message);
-		} else {
-			errorToast(message);
+		try {
+			const { message, ok } = await createPosition(values);
+			if (ok) {
+				form.reset();
+				setIsOpen(false);
+				successToast(message);
+			} else {
+				errorToast(message);
+			}
+		} catch (error) {
+			errorToast('Something went wrong');
+			console.error(error);
 		}
 	}
 	return (
-		<div className="w-full bg-muted rounded-lg p-4">
+		<Card className="w-full border-0 p-4">
 			<Button
 				variant={'outline'}
 				size={'icon'}
@@ -59,10 +71,15 @@ export const PanelSection: React.FC = () => {
 				<PlusIcon size={24} />
 			</Button>
 			{isOpen && (
-				<Modal open={isOpen} title="Add Position" className="w-fit">
+				<Modal
+					open={isOpen}
+					setIsOpen={setIsOpen}
+					title="Add Position"
+					className="w-fit"
+				>
 					<Form {...form}>
 						<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-							<div className="flex flex-col md:flex-row gap-3">
+							<div className="flex gap-3">
 								<FormField
 									control={form.control}
 									name="market"
@@ -70,7 +87,12 @@ export const PanelSection: React.FC = () => {
 										<FormItem className="w-full">
 											<FormLabel>Market</FormLabel>
 											<FormControl>
-												<Combobox variants={Object.keys(Market)} {...field} />
+												<Combobox
+													variants={data?.user.balance.map(
+														(balance: Balance) => balance.market,
+													)}
+													{...field}
+												/>
 											</FormControl>
 											<FormMessage />
 										</FormItem>
@@ -90,7 +112,7 @@ export const PanelSection: React.FC = () => {
 									)}
 								/>
 							</div>
-							<div className="flex flex-col md:flex-row gap-3">
+							<div className="flex gap-3">
 								<FormField
 									control={form.control}
 									name="positionType"
@@ -125,7 +147,42 @@ export const PanelSection: React.FC = () => {
 								/>
 							</div>
 
-							<div className="flex flex-col md:flex-row gap-3">
+							<div className="flex gap-3">
+								<FormField
+									control={form.control}
+									name="entryTime"
+									render={({ field }) => (
+										<FormItem className="w-full">
+											<FormLabel>Entry Time</FormLabel>
+											<FormControl>
+												<DateTimePicker
+													value={field.value}
+													onChange={field.onChange}
+												/>
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
+									name="exitTime"
+									render={({ field }) => (
+										<FormItem className="w-full">
+											<FormLabel>Exit Time</FormLabel>
+											<FormControl>
+												<DateTimePicker
+													value={field.value}
+													onChange={field.onChange}
+												/>
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+							</div>
+
+							<div className="flex gap-3">
 								<FormField
 									control={form.control}
 									name="entryPrice"
@@ -169,7 +226,7 @@ export const PanelSection: React.FC = () => {
 									)}
 								/>
 							</div>
-							<div className="flex flex-col md:flex-row gap-3">
+							<div className="flex gap-3">
 								<FormField
 									control={form.control}
 									name="volume"
@@ -217,10 +274,18 @@ export const PanelSection: React.FC = () => {
 							<Button type="submit" className="w-full">
 								<PlusIcon /> Add
 							</Button>
+							<Button
+								type="button"
+								className="w-full"
+								variant={'destructive'}
+								onClick={() => setIsOpen(false)}
+							>
+								Cancel
+							</Button>
 						</form>
 					</Form>
 				</Modal>
 			)}
-		</div>
+		</Card>
 	);
 };
