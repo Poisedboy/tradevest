@@ -1,3 +1,4 @@
+import { Balance } from '@prisma/client';
 import NextAuth from 'next-auth';
 
 declare module 'next-auth' {
@@ -5,6 +6,7 @@ declare module 'next-auth' {
 		id: string;
 		firstName: string;
 		lastName: string;
+		balance?: Balance[];
 	}
 	interface Session {
 		user: {

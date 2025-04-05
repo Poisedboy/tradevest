@@ -1,6 +1,7 @@
 'use server';
 
 import { prisma } from '@/lib/prisma';
+import { SignupFormType } from '@/types/forms.types';
 import bcrypt from 'bcryptjs';
 
 export const createUser = async ({
@@ -8,12 +9,9 @@ export const createUser = async ({
 	password,
 	firstName,
 	lastName,
-}: {
-	email: string;
-	password: string;
-	firstName: string;
-	lastName: string;
-}): Promise<{ message: string; ok: boolean }> => {
+	market,
+	balance,
+}: SignupFormType): Promise<{ message: string; ok: boolean }> => {
 	if (!email || !password) {
 		return { message: 'Email and password are required', ok: false };
 	}
@@ -36,7 +34,8 @@ export const createUser = async ({
 		});
 		await prisma.balance.create({
 			data: {
-				total: 0.0,
+				market,
+				balance: balance ?? 0.0,
 				user: {
 					connect: {
 						id: user.id,

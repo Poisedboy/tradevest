@@ -5,6 +5,8 @@ export const signupSchema = z.object({
 	email: z.string().min(1, { message: 'Email is required' }).email(),
 	firstName: z.string().min(1, { message: 'First name is required' }),
 	lastName: z.string().min(1, { message: 'Last name is required' }),
+	market: z.nativeEnum(Market),
+	balance: z.number().nonnegative({ message: 'Balance must be 0 or greater' }),
 	password: z
 		.string()
 		.min(8, { message: 'Password must be at least 8 characters' }),

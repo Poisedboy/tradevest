@@ -15,23 +15,23 @@ datasource db {
 }
 
 model User {
-  id        String     @id @default(cuid())
-  email     String     @unique
+  id        String    @id @default(cuid())
+  email     String    @unique
   firstName String
   lastName  String
   password  String?
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  positions Position[]
-  balance   Balance?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  balance   Balance[]
 }
 
 model Position {
   id           String         @id @default(cuid())
-  userId       String
-  user         User           @relation(fields: [userId], references: [id])
-  market       Market
+  balanceId    String
+  balance      Balance        @relation(fields: [balanceId], references: [id])
   pair         String
+  entryTime    DateTime       @default(now())
+  exitTime     DateTime       @default(now())
   entryPrice   Decimal
   exitPrice    Decimal?
   volume       Decimal
@@ -39,7 +39,7 @@ model Position {
   positionType PositionType
   status       PositionStatus @default(OPEN)
   createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
+  updatedAt    DateTime       @default(now()) @updatedAt
 }
 
 enum Market {
@@ -58,10 +58,12 @@ enum PositionStatus {
 }
 
 model Balance {
-  id        String   @id @default(cuid())
-  userId    String   @unique
-  user      User     @relation(fields: [userId], references: [id])
-  total     Decimal  @default(0.0)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        String     @id @default(cuid())
+  userId    String     @unique
+  user      User       @relation(fields: [userId], references: [id])
+  market    Market     @default(FOREX)
+  balance   Decimal    @default(0.0)
+  positions Position[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 }

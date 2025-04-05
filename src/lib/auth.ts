@@ -23,6 +23,9 @@ export const authOptions = {
 
 				const user = await prisma.user.findUnique({
 					where: { email: credentials.email },
+					include: {
+						balance: true,
+					},
 				});
 
 				if (!user) {
@@ -37,13 +40,7 @@ export const authOptions = {
 				if (!isValidPassword) {
 					throw new Error('Invalid password');
 				}
-
-				return {
-					id: user.id,
-					email: user.email,
-					firstName: user.firstName,
-					lastName: user.lastName,
-				};
+				return user;
 			},
 		}),
 	],
@@ -53,6 +50,7 @@ export const authOptions = {
 				token.id = user.id;
 				token.firstName = user.firstName;
 				token.lastName = user.lastName;
+				token.balance = user.balance;
 			}
 			return token;
 		},
@@ -61,12 +59,13 @@ export const authOptions = {
 			session.user.firstName = token.firstName;
 			session.user.lastName = token.lastName;
 			session.user.name = `${token.firstName} ${token.lastName}`;
+			session.user.balance = token.balance;
 			return session;
 		},
 	},
 	session: {
 		strategy: 'jwt' as const,
-		maxAge: 60,
+		maxAge: 60 * 60 * 24, // 1 day
 	},
 	secret: process.env.NEXTAUTH_SECRET,
 };

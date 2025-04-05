@@ -18,6 +18,8 @@ import { SignupFormType, signupSchema } from '@/types/forms.types';
 import { createUser } from '@/actions/createUser';
 import { useNotification } from '@/hooks/useNotification';
 import { useRouter } from 'next/navigation';
+import { Market } from '@prisma/client';
+import { Combobox } from './Combobox';
 
 export function SignupForm({
 	className,
@@ -33,6 +35,8 @@ export function SignupForm({
 			password: '',
 			firstName: '',
 			lastName: '',
+			market: Market.FOREX,
+			balance: 0,
 		},
 	});
 
@@ -103,6 +107,42 @@ export function SignupForm({
 										<FormLabel>Last Name</FormLabel>
 										<FormControl>
 											<Input placeholder="Dou" {...field} />
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+						</div>
+						<div className="flex flex-col md:flex-row gap-5">
+							<FormField
+								control={form.control}
+								name="balance"
+								render={({ field }) => (
+									<FormItem className="w-full">
+										<FormLabel>Current Balance</FormLabel>
+										<FormControl>
+											<Input
+												placeholder="0"
+												className="w-full"
+												type="number"
+												{...field}
+												onChange={(e) => {
+													field.onChange(Number(e.target.value));
+												}}
+											/>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+							<FormField
+								control={form.control}
+								name="market"
+								render={({ field }) => (
+									<FormItem className="w-full">
+										<FormLabel>Market</FormLabel>
+										<FormControl>
+											<Combobox variants={Object.keys(Market)} {...field} />
 										</FormControl>
 										<FormMessage />
 									</FormItem>

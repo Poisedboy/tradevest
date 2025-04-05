@@ -10,18 +10,15 @@ export const getStatistic = async () => {
 		where: {
 			userId: session?.user.id,
 		},
-		select: {
-			total: true,
-		},
 	});
 	const positions = await prisma.position.findMany({
 		where: {
-			userId: session?.user.id,
+			balanceId: balance?.id,
 		},
 	});
 	return {
-		balance: balance?.total.toNumber(),
-		positions: positions.length,
+		balance: balance?.balance.toNumber(),
+		positionsQnty: positions.length,
 		firstName: session?.user.firstName,
 	};
 };
