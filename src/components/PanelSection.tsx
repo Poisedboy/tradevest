@@ -61,231 +61,242 @@ export const PanelSection: React.FC = () => {
 		}
 	}
 	return (
-		<Card className="w-full border-0 p-4">
-			<Button
-				variant={'outline'}
-				size={'icon'}
-				className="rounded-lg"
-				onClick={() => setIsOpen(true)}
-			>
-				<PlusIcon size={24} />
-			</Button>
-			{isOpen && (
-				<Modal
-					open={isOpen}
-					setIsOpen={setIsOpen}
-					title="Add Position"
-					className="w-fit"
+		<Card className="w-full flex flex-row justify-between border-0 p-4">
+			<div>
+				<Button
+					variant={'outline'}
+					size={'icon'}
+					className="rounded-lg"
+					onClick={() => setIsOpen(true)}
 				>
-					<Form {...form}>
-						<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-							<div className="flex gap-3">
-								<FormField
-									control={form.control}
-									name="market"
-									render={({ field }) => (
-										<FormItem className="w-full">
-											<FormLabel>Market</FormLabel>
-											<FormControl>
-												<Combobox
-													variants={data?.user.balance.map(
-														(balance: Balance) => balance.market,
-													)}
-													{...field}
-												/>
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-								<FormField
-									control={form.control}
-									name="pair"
-									render={({ field }) => (
-										<FormItem className="w-full">
-											<FormLabel>Pair</FormLabel>
-											<FormControl>
-												<Input placeholder="EUR/USD or BTC/USDT" {...field} />
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-							</div>
-							<div className="flex gap-3">
-								<FormField
-									control={form.control}
-									name="positionType"
-									render={({ field }) => (
-										<FormItem className="w-full">
-											<FormLabel>Position Type</FormLabel>
-											<FormControl>
-												<Combobox
-													variants={Object.keys(PositionType)}
-													{...field}
-												/>
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-								<FormField
-									control={form.control}
-									name="status"
-									render={({ field }) => (
-										<FormItem className="w-full">
-											<FormLabel>Status</FormLabel>
-											<FormControl>
-												<Combobox
-													variants={Object.keys(PositionStatus)}
-													{...field}
-												/>
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-							</div>
-
-							<div className="flex gap-3">
-								<FormField
-									control={form.control}
-									name="entryTime"
-									render={({ field }) => (
-										<FormItem className="w-full">
-											<FormLabel>Entry Time</FormLabel>
-											<FormControl>
-												<DateTimePicker
-													value={field.value}
-													onChange={field.onChange}
-												/>
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-								<FormField
-									control={form.control}
-									name="exitTime"
-									render={({ field }) => (
-										<FormItem className="w-full">
-											<FormLabel>Exit Time</FormLabel>
-											<FormControl>
-												<DateTimePicker
-													value={field.value}
-													onChange={field.onChange}
-												/>
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-							</div>
-
-							<div className="flex gap-3">
-								<FormField
-									control={form.control}
-									name="entryPrice"
-									render={({ field }) => (
-										<FormItem className="w-full">
-											<FormLabel>Entry Price</FormLabel>
-											<FormControl>
-												<Input
-													type="number"
-													{...field}
-													onChange={(e) => {
-														field.onChange({
-															target: { value: +e.target.value },
-														});
-													}}
-												/>
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-								<FormField
-									control={form.control}
-									name="exitPrice"
-									render={({ field }) => (
-										<FormItem className="w-full">
-											<FormLabel>Exit Price</FormLabel>
-											<FormControl>
-												<Input
-													type="number"
-													{...field}
-													onChange={(e) => {
-														field.onChange({
-															target: { value: +e.target.value },
-														});
-													}}
-												/>
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-							</div>
-							<div className="flex gap-3">
-								<FormField
-									control={form.control}
-									name="volume"
-									render={({ field }) => (
-										<FormItem className="w-full">
-											<FormLabel>Volume</FormLabel>
-											<FormControl>
-												<Input
-													type="number"
-													{...field}
-													onChange={(e) => {
-														field.onChange({
-															target: { value: +e.target.value },
-														});
-													}}
-												/>
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-								<FormField
-									control={form.control}
-									name="profitLoss"
-									render={({ field }) => (
-										<FormItem className="w-full">
-											<FormLabel>Profit/Loss</FormLabel>
-											<FormControl>
-												<Input
-													type="number"
-													{...field}
-													onChange={(e) => {
-														field.onChange({
-															target: { value: +e.target.value },
-														});
-													}}
-												/>
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-							</div>
-
-							<Button type="submit" className="w-full">
-								<PlusIcon /> Add
-							</Button>
-							<Button
-								type="button"
-								className="w-full"
-								variant={'destructive'}
-								onClick={() => setIsOpen(false)}
+					<PlusIcon size={24} />
+				</Button>
+				{isOpen && (
+					<Modal
+						open={isOpen}
+						setIsOpen={setIsOpen}
+						title="Add Position"
+						className="w-fit"
+					>
+						<Form {...form}>
+							<form
+								onSubmit={form.handleSubmit(onSubmit)}
+								className="space-y-5"
 							>
-								Cancel
-							</Button>
-						</form>
-					</Form>
-				</Modal>
-			)}
+								<div className="flex gap-3">
+									<FormField
+										control={form.control}
+										name="market"
+										render={({ field }) => (
+											<FormItem className="w-full">
+												<FormLabel>Market</FormLabel>
+												<FormControl>
+													<Combobox
+														variants={data?.user.balance.map(
+															(balance: Balance) => balance.market,
+														)}
+														{...field}
+													/>
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+									<FormField
+										control={form.control}
+										name="pair"
+										render={({ field }) => (
+											<FormItem className="w-full">
+												<FormLabel>Pair</FormLabel>
+												<FormControl>
+													<Input placeholder="EUR/USD or BTC/USDT" {...field} />
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+								</div>
+								<div className="flex gap-3">
+									<FormField
+										control={form.control}
+										name="positionType"
+										render={({ field }) => (
+											<FormItem className="w-full">
+												<FormLabel>Position Type</FormLabel>
+												<FormControl>
+													<Combobox
+														variants={Object.keys(PositionType)}
+														{...field}
+													/>
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+									<FormField
+										control={form.control}
+										name="status"
+										render={({ field }) => (
+											<FormItem className="w-full">
+												<FormLabel>Status</FormLabel>
+												<FormControl>
+													<Combobox
+														variants={Object.keys(PositionStatus)}
+														{...field}
+													/>
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+								</div>
+
+								<div className="flex gap-3">
+									<FormField
+										control={form.control}
+										name="entryTime"
+										render={({ field }) => (
+											<FormItem className="w-full">
+												<FormLabel>Entry Time</FormLabel>
+												<FormControl>
+													<DateTimePicker
+														value={field.value}
+														onChange={field.onChange}
+													/>
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+									<FormField
+										control={form.control}
+										name="exitTime"
+										render={({ field }) => (
+											<FormItem className="w-full">
+												<FormLabel>Exit Time</FormLabel>
+												<FormControl>
+													<DateTimePicker
+														value={field.value}
+														onChange={field.onChange}
+													/>
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+								</div>
+
+								<div className="flex gap-3">
+									<FormField
+										control={form.control}
+										name="entryPrice"
+										render={({ field }) => (
+											<FormItem className="w-full">
+												<FormLabel>Entry Price</FormLabel>
+												<FormControl>
+													<Input
+														type="number"
+														{...field}
+														onChange={(e) => {
+															field.onChange({
+																target: { value: +e.target.value },
+															});
+														}}
+													/>
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+									<FormField
+										control={form.control}
+										name="exitPrice"
+										render={({ field }) => (
+											<FormItem className="w-full">
+												<FormLabel>Exit Price</FormLabel>
+												<FormControl>
+													<Input
+														type="number"
+														{...field}
+														onChange={(e) => {
+															field.onChange({
+																target: { value: +e.target.value },
+															});
+														}}
+													/>
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+								</div>
+								<div className="flex gap-3">
+									<FormField
+										control={form.control}
+										name="volume"
+										render={({ field }) => (
+											<FormItem className="w-full">
+												<FormLabel>Volume</FormLabel>
+												<FormControl>
+													<Input
+														type="number"
+														{...field}
+														onChange={(e) => {
+															field.onChange({
+																target: { value: +e.target.value },
+															});
+														}}
+													/>
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+									<FormField
+										control={form.control}
+										name="profitLoss"
+										render={({ field }) => (
+											<FormItem className="w-full">
+												<FormLabel>Profit/Loss</FormLabel>
+												<FormControl>
+													<Input
+														type="number"
+														{...field}
+														onChange={(e) => {
+															field.onChange({
+																target: { value: +e.target.value },
+															});
+														}}
+													/>
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+								</div>
+
+								<Button type="submit" className="w-full">
+									<PlusIcon /> Add
+								</Button>
+								<Button
+									type="button"
+									className="w-full"
+									variant={'destructive'}
+									onClick={() => setIsOpen(false)}
+								>
+									Cancel
+								</Button>
+							</form>
+						</Form>
+					</Modal>
+				)}
+			</div>
+			<div className="flex gap-2 items-center">
+				<p>{data?.user.balance[0].balance}</p>
+				{data?.user.balance.map((balance: Balance) => (
+					<Button key={balance.id}>{balance.market}</Button>
+				))}
+			</div>
 		</Card>
 	);
 };
