@@ -6,18 +6,22 @@ import { getServerSession } from 'next-auth';
 
 export const getStatistic = async () => {
 	const session = await getServerSession(authOptions);
-	const balance = await prisma.balance.findUnique({
+	const balances = await prisma.balance.findMany({
 		where: {
 			userId: session?.user.id,
 		},
 	});
+	const balanceIds = balances.map((balance) => balance.id);
 	const positions = await prisma.position.findMany({
 		where: {
-			balanceId: balance?.id,
+			balanceId: { in: balanceIds },
 		},
 	});
 	return {
-		balance: balance?.balance.toNumber(),
+		balance: balances.reduce(
+			(sum, balance) => sum + balance.balance.toNumber(),
+			0,
+		),
 		positionsQnty: positions.length,
 		firstName: session?.user.firstName,
 	};

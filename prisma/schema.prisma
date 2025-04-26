@@ -59,7 +59,7 @@ enum PositionStatus {
 
 model Balance {
   id        String     @id @default(cuid())
-  userId    String     @unique
+  userId    String
   user      User       @relation(fields: [userId], references: [id])
   market    Market     @default(FOREX)
   balance   Decimal    @default(0.0)
