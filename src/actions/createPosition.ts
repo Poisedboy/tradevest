@@ -5,7 +5,6 @@ import { prisma } from '@/lib/prisma';
 import { PositionFormType, positionSchema } from '@/types/forms.types';
 import { Balance } from '@prisma/client';
 import { getServerSession } from 'next-auth';
-import { revalidatePath } from 'next/cache';
 
 export const createPosition = async (
 	position: PositionFormType,
@@ -26,12 +25,12 @@ export const createPosition = async (
 			data: {
 				balanceId: balanceId,
 				pair: position.pair,
-				entryPrice: position.entryPrice,
-				exitPrice: position.exitPrice,
+				entryPrice: String(position.entryPrice),
+				exitPrice: String(position.exitPrice),
 				entryTime: position.entryTime,
 				exitTime: position.exitTime,
-				volume: position.volume,
-				profitLoss: position.profitLoss,
+				volume: String(position.volume),
+				profit: String(position.profit),
 				positionType: position.positionType,
 				status: position.status,
 			},
@@ -39,19 +38,17 @@ export const createPosition = async (
 		if (positionData) {
 			const balance = await prisma.balance.update({
 				where: {
-					userId: session.user.id,
+					id: balanceId,
 				},
 				data: {
 					balance: {
-						increment: position.profitLoss,
+						increment: position.profit,
 					},
 				},
 			});
 			if (!balance) {
 				return { message: 'Balance not updated', ok: false };
 			} else {
-				revalidatePath('/dashboard');
-				revalidatePath('/positions');
 				return {
 					message: 'Position created successfully',
 					ok: true,

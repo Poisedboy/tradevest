@@ -12,7 +12,7 @@ export const getStatistic = async () => {
 		},
 	});
 	const balanceIds = balances.map((balance) => balance.id);
-	const positions = await prisma.position.findMany({
+	const positionsQnty = await prisma.position.count({
 		where: {
 			balanceId: { in: balanceIds },
 		},
@@ -22,7 +22,7 @@ export const getStatistic = async () => {
 			(sum, balance) => sum + balance.balance.toNumber(),
 			0,
 		),
-		positionsQnty: positions.length,
+		positionsQnty: positionsQnty,
 		firstName: session?.user.firstName,
 	};
 };

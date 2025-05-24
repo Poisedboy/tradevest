@@ -1,13 +1,22 @@
-import { getPositions } from '@/actions/getPositions';
-import { Positions } from '@/components/list/Positions';
-import { PanelSection } from '@/components/PanelSection';
+import { Positions } from '@/components/positions/Positions';
+import { PanelSection } from '@/components/positions/PanelSection';
+import { prisma } from '@/lib/prisma';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 
 export default async function PositionsPage() {
-	const positions = await getPositions();
+	const session = await getServerSession(authOptions);
+	const rawBalances = await prisma.balance.findMany({
+		where: { userId: session?.user.id },
+	});
+	const balances = rawBalances.map((balance) => ({
+		...balance,
+		balance: balance.balance.toNumber(),
+	}));
 	return (
 		<div className="paddingX space-y-5">
-			<PanelSection />
-			<Positions positions={positions?.data ?? []} />
+			<PanelSection balances={balances} />
+			<Positions />
 		</div>
 	);
 }

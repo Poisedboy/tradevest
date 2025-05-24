@@ -23,17 +23,32 @@ export const signinSchema = z.object({
 
 export type SigninFormType = z.infer<typeof signinSchema>;
 
-export const positionSchema = z.object({
-	pair: z.string().min(1, 'Pair is required'),
-	entryPrice: z.number().positive('must be greater than 0'),
-	exitPrice: z.number().positive('must be greater than 0'),
-	market: z.nativeEnum(Market),
-	entryTime: z.date(),
-	exitTime: z.date(),
-	volume: z.number().positive('must be greater than 0'),
-	profitLoss: z.number(),
-	positionType: z.nativeEnum(PositionType),
-	status: z.nativeEnum(PositionStatus),
-});
+export const positionSchema = z
+	.object({
+		pair: z.string().min(1, 'Pair is required'),
+		entryPrice: z.string(),
+		exitPrice: z.string().optional(),
+		market: z.nativeEnum(Market),
+		entryTime: z.date(),
+		exitTime: z.date().optional(),
+		volume: z.string(),
+		profit: z.string().optional(),
+		positionType: z.nativeEnum(PositionType),
+		status: z.nativeEnum(PositionStatus),
+	})
+	.refine(
+		(data) => {
+			if (data.status === PositionStatus.OPEN) {
+				return true; // No additional validation for OPEN status
+			}
+			// For non-OPEN statuses, ensure exitTime, exitPrice, and profit are provided
+			return !!data.exitTime && !!data.exitPrice && !!data.profit;
+		},
+		{
+			message:
+				'exitTime, exitPrice, and profit are required when status is not OPEN',
+			path: ['exitTime'], // Highlight exitTime as an example
+		},
+	);
 
 export type PositionFormType = z.infer<typeof positionSchema>;

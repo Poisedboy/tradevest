@@ -32,10 +32,10 @@ model Position {
   pair         String
   entryTime    DateTime       @default(now())
   exitTime     DateTime       @default(now())
-  entryPrice   Decimal
-  exitPrice    Decimal?
-  volume       Decimal
-  profitLoss   Decimal?
+  entryPrice   String
+  exitPrice    String?
+  volume       String
+  profit       String
   positionType PositionType
   status       PositionStatus @default(OPEN)
   createdAt    DateTime       @default(now())
